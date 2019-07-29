@@ -1026,11 +1026,23 @@ class WeighMeanVar(Algo):
 
         t0 = target.now - self.lag
         prc = target.universe[selected].loc[t0 - self.lookback:t0]
-        tw = bt.ffn.calc_mean_var_weights(
-            prc.to_returns().dropna(), weight_bounds=self.bounds,
-            covar_method=self.covar_method, rf=self.rf)
+        returns = prc.to_returns().dropna()
+        if returns.index.size > 1:
+            returns = returns.dropna()
+            tw = bt.ffn.calc_mean_var_weights(
+                returns,
+                weight_bounds=self.bounds,
+                covar_method=self.covar_method,
+                rf=self.rf)
+            target.temp['weights'] = tw.dropna()
+        else:
+            n = len(selected)
 
-        target.temp['weights'] = tw.dropna()
+            if n == 0:
+                target.temp['weights'] = {}
+            else:
+                w = 1.0 / n
+                target.temp['weights'] = {x: w for x in selected}
         return True
 
 
