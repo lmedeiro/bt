@@ -8,6 +8,7 @@ from copy import deepcopy
 import pandas as pd
 import numpy as np
 import cython as cy
+from pdb import set_trace as bp
 
 
 class Node(object):
@@ -697,6 +698,10 @@ class StrategyBase(Node):
 
         """
         # if weight is 0 - we want to close child
+        #print(type(weight))
+        # bp()
+        if 'pandas' in str(type(weight)):
+            weight = weight.values
         if weight == 0:
             if child in self.children:
                 return self.close(child)

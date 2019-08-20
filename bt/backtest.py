@@ -124,7 +124,7 @@ class Backtest(object):
                  commissions=None,
                  integer_positions=True,
                  progress_bar=True):
-
+        #print('local backtest')
         if data.columns.duplicated().any():
             cols = data.columns[data.columns.duplicated().tolist()].tolist()
             raise Exception(
@@ -182,7 +182,7 @@ class Backtest(object):
         # loop through dates
         # init progress bar
         if self.progress_bar:
-            bar = pyprind.ProgBar(len(self.dates), title=self.name, stream=1)
+            bar = pyprind.ProgBar(len(self.dates), title='\n' + self.name, stream=1)
 
         # since there is a dummy row at time 0, start backtest at date 1.
         # we must still update for t0
